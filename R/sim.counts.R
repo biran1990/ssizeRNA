@@ -28,8 +28,7 @@
 #' @return \item{delta}{log fold change for each gene between treatment group and control group.}
 #' 
 #' @author Ran Bi \email{biran@@iastate.edu}, 
-#'         Peng Liu \email{pliu@@iastate.edu}, 
-#'         Tim Triche \email{tim.triche@@gmail.com}
+#'         Peng Liu \email{pliu@@iastate.edu}
 #' 
 #' @examples
 #' arg <- list(nGenes = 10000,   ## total number of genes

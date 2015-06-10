@@ -59,7 +59,6 @@ sim$counts                              ## count data matrix
 }
 \author{
 Ran Bi \email{biran@iastate.edu},
-        Peng Liu \email{pliu@iastate.edu},
-        Tim Triche \email{tim.triche@gmail.com}
+        Peng Liu \email{pliu@iastate.edu}
 }
 

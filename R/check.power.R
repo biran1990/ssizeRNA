@@ -29,8 +29,7 @@
 #'                           by q-value procedure (Storey et al., 2004).}
 #' 
 #' @author Ran Bi \email{biran@@iastate.edu}, 
-#'         Peng Liu \email{pliu@@iastate.edu}, 
-#'         Tim Triche \email{tim.triche@@gmail.com}
+#'         Peng Liu \email{pliu@@iastate.edu}
 #' 
 #' @references Benjamini, Y. and Hochberg, Y. (1995) 
 #'             Controlling the false discovery rate: a practical and 
