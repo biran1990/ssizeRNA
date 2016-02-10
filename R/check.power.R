@@ -10,13 +10,22 @@
 #' 
 #' @import qvalue
 #'
-#' @param nGenes total number of genes to test for differential expression.
-#' @param mu mean counts across all tested genes in the control group.
-#' @param dispersion mean dispersion across all genes in the control group.
-#' @param group treatment group assignments for simulations.
-#' @param fdr the target false discovery rate to be controlled.
-#' @param pi0 proportion of non-differentially expressed genes. 
-#' @param logfc minimum DE log fold change between treatment and control groups.
+#' @param nGenes total number of genes, the default value is \code{10000}.
+#' @param pi0 proportion of non-differentially expressed genes, 
+#'            the default value is \code{0.8}.
+#' @param m sample size per treatment group.
+#' @param mu a vector (or scalar) of mean counts in control group 
+#'           from which to simulate.
+#' @param disp a vector (or scalar) of dispersion parameter 
+#'             from which to simulate.
+#' @param logfc a vector (or scalar, or a function that takes an integer n 
+#'                        and generates a vector of length n)
+#'              of log fold change for differentially expressed (DE) genes.  
+#' @param up proportion of up-regulated genes among all DE genes, 
+#'           the default value is \code{0.5}.
+#' @param replace sample with or without replacement from given parameters. 
+#'                See Details for more information.
+#' @param fdr the false discovery rate to be controlled.
 #' @param sims number of simulations to run when computing power and FDR.
 #' 
 #' @return \item{pow_bh_ave}{average power when controlling FDR 
@@ -44,37 +53,37 @@
 #' @examples
 #' library(limma)
 #' library(qvalue)
-#' nGenes <- 10000                          ## number of genes to test for DE
-#' mu <- 10                                 ## mean read counts in control group
-#' dispersion <- 0.1                        ## mean dispersion across all genes
-#' group <- rep(c(1, 2), each = 13)         ## group assignments for simulations
+#' m <- 14                      ## sample size per treatment group
+#' mu <- 10                     ## mean read counts in control group
+#' disp <- 0.1                  ## dispersion for all genes
+#' logfc <- log(2)              ## log fold change for DE genes
 #' 
-#' check.power(nGenes, mu, dispersion, group)
+#' check.power(m = m, mu = mu, disp = disp, logfc = logfc, sims = 5)
 #'
 #' @export
 #' 
-check.power <- function(nGenes, mu, dispersion, group, 
-                        fdr=0.05, pi0=0.8, logfc=1, sims=20) {
-
+check.power <- function(nGenes = 10000, pi0 = 0.8, m, mu, disp, logfc, 
+                        up = 0.5, replace = TRUE, fdr = 0.05, sims = 100) {
+  
   ## empirical "power" & "fdr" function
-  powerfdr.fun <- function(fdr, p){ # {{{
+  powerfdr.fun <- function(fdr, p){
     V <- sum( (p < fdr) & (sim$de == FALSE))
     R <- sum( p < fdr )
     S <- R - V
     power <- S / (nGenes * (1 - pi0))
     fdr_true <- V / R
     return(c(power, fdr_true))
-  } # }}}
+  }
   
   res <- list()
   pow_bh <- fdr_bh <- pow_qvalue <- fdr_qvalue <- rep(0, sims)
   for (j in 1:sims){
-    message("Performing simulation ", j, "/", sims, "...")
-    sim <- sim.counts(arg=list(nGenes=nGenes, pi0=pi0, group=group), 
-                      mu=mu, disp=dispersion, logfc=logfc)
+    # message("Performing simulation ", j, "/", sims, "...")
+    sim <- sim.counts(nGenes, pi0, m, mu, disp, logfc, up, replace)
     cts <- sim$counts
     lib.size <- colSums(cts)
-    d <- DGEList(cts, lib.size, group=group)
+    group = rep(c(1, 2), each = m)
+    d <- DGEList(cts, lib.size, group = group)
     d <- calcNormFactors(d)
     design <- model.matrix(~ factor(group))
     y <- voom(d, design, plot=FALSE)       # convert read counts to log2-cpm 
@@ -83,7 +92,7 @@ check.power <- function(nGenes, mu, dispersion, group,
     fit <- eBayes(fit)
     pvalue <- fit$p.value[, 2]             # pvalue
     
-    p_bh <- p.adjust(pvalue, method="BH")  # Benjamini & Hochberg
+    p_bh <- p.adjust(pvalue, method = "BH")  # Benjamini & Hochberg
     pow_bh[j] <- powerfdr.fun(fdr, p_bh)[1]
     fdr_bh[j] <- powerfdr.fun(fdr, p_bh)[2]
   
@@ -91,7 +100,7 @@ check.power <- function(nGenes, mu, dispersion, group,
     pow_qvalue[j] <- powerfdr.fun(fdr, p_qvalue)[1]
     fdr_qvalue[j] <- powerfdr.fun(fdr, p_qvalue)[2]
   }
-  message("Simulations completed.")
+  # message("Simulations completed.")
     
   ## average power & true fdr over sims simulations
   res$pow_bh_ave <- mean(pow_bh)
