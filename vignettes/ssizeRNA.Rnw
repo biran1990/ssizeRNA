@@ -10,7 +10,6 @@
 <<knitr, echo=FALSE, results="hide">>=
 library("knitr")
 opts_chunk$set(
-  tidy=FALSE,
   message=FALSE)
 @ 
 
