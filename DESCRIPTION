@@ -1,8 +1,8 @@
 Package: ssizeRNA
 Type: Package
 Title: Sample Size Calculation for RNA-Seq Experimental Design
-Version: 1.2.0
-Date: 2016-02-01
+Version: 1.2.1
+Date: 2016-02-09
 Author: Ran Bi <biran@iastate.edu>, Peng Liu <pliu@iastate.edu>
 Authors@R: c(
     person("Ran", "Bi", email = "biran@iastate.edu", role = c("aut", "cre")),
