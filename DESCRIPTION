@@ -30,7 +30,7 @@ Imports:
     qvalue,
     ssize.fdr
 VignetteBuilder: knitr
-Suggests: BiocStyle, knitr
+Suggests: knitr
 License: GPL (>= 2)
 biocViews: GeneExpression, DifferentialExpression, ExperimentalDesign,
     Sequencing, RNASeq, DNASeq, Microarray
