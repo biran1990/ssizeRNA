@@ -9,6 +9,8 @@
 #' vary among genes. 
 #' A plot of power versus sample size is generated.
 #' 
+#' @import stats graphics
+#' 
 #' @param deltaMean location (mean) parameter of normal distribution 
 #'                  followed by each \emph{delta.g}.
 #' @param deltaSE scale (standard deviation) parameter of normal distribution 

@@ -1,4 +1,16 @@
-CHANGES IN VERSION 1.2.1
+CHANGES IN VERSION 1.2.8
+------------------------
+
+    o Changed input logfc to fc
+
+
+CHANGES IN VERSION 1.2.6
+------------------------
+
+    o Modified reference information
+
+
+CHANGES IN VERSION 1.2.4
 ------------------------
 
     o Polished functions 
